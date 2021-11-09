@@ -7,6 +7,7 @@ function do_pie(name, update_url, url_params, units, refresh) {
 		pie.setInterval(setInterval(function () { pie.update(); }, refresh));
 
 	// Return new class instance, with
+	console.log(pie);
 	return pie;
 }
 
