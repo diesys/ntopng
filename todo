@@ -1,0 +1,124 @@
+file rest nel path rest/v2/*
+
+http://localhost:3000/lua/host_details.lua?host=2001:b07:6469:7df8:2c03:34e8:808d:c6ec&page=ndpi
+
+
+
+https://apexcharts.com/
+
+print del json come lo voglio io per il grafico pie
+
+
+http://localhost:3000/lua/admin/edit_configset.lua?subdir=all#enabled
+
+inspector -> network -> response -> rsp: object response
+
+{
+	"rsp": {
+		"engaged_alerts_notice": 0,
+		"engaged_alerts": 0,
+		"engaged_alerts_error": 0,
+		"throughput_pps": 5.597644329071,
+		"host_dropped_alerts": 0,
+		"is_view": false,
+		"ifid": "1",
+		"tcpPacketStats": {
+			"out_of_order": 775,
+			"retransmissions": 59,
+			"lost": 213
+		},
+		"ifname": "wlan0",
+		"num_hosts": 24,
+		"flow_dropped_alerts": 0,
+		"engaged_alerts_warning": 0,
+		"throughput": {
+			"download": {
+				"pps": 3.9983174800873,
+				"bps": 324.66339111328
+			},
+			"upload": {
+				"pps": 1.5993269681931,
+				"bps": 930.6083984375
+			}
+		},
+		"packets_upload": 17241,
+		"throughput_bps": 1255.2717285156,
+		"num_devices": 7,
+		"localtime": "17:48:04 +0100",
+		"local2remote": 2869657,
+		"drops": 0,
+		"periodic_stats_update_frequency_secs": 5,
+		"alerted_flows_notice": 2,
+		"num_remote_hosts_anomalies": 0,
+		"num_flows": 30,
+		"packets_download": 30193,
+		"bytes_download": 29355139,
+		"hosts_pctg": 1,
+		"epoch": 1636390084,
+		"num_live_captures": 0,
+		"speed": 1000,
+		"remote_bps": 0,
+		"alerted_flows_warning": 0,
+		"alerted_flows": 2,
+		"packets": 47434,
+		"other_dropped_alerts": 0,
+		"alerted_flows_error": 0,
+		"num_local_hosts_anomalies": 0,
+		"num_local_hosts": 14,
+		"remote_pps": 0,
+		"dropped_alerts": 0,
+		"macs_pctg": 1,
+		"bytes": 33157059,
+		"remote2local": 28747227,
+		"flows_pctg": 1,
+		"uptime": "36:00",
+		"system_host_stats": {
+			"mem_total": 16263480,
+			"cpu_load": 2.0499999523163,
+			"cpu_states": {
+				"idle": 56.730769230769,
+				"iowait": 0.33653846153846,
+				"user": 33.317307692308,
+				"irq": 0.38461538461538,
+				"guest": 0,
+				"steal": 0,
+				"softirq": 0.096153846153846,
+				"guest_nice": 0,
+				"system": 9.1346153846154,
+				"nice": 0
+			},
+			"written_alerts": 0,
+			"alerts_queries": 1782,
+			"mem_cached": 5153648,
+			"alerts_stats": {
+				"alert_queues": {
+					"internal_alerts_queue": {
+						"pct_not_enqueued": 0
+					}
+				}
+			},
+			"dropped_alerts": 0,
+			"mem_free": 6015856,
+			"mem_used": 4353884,
+			"mem_buffers": 411608,
+			"mem_sreclaimable": 328484,
+			"mem_shmem": 0,
+			"mem_ntopng_resident": 238528,
+			"mem_ntopng_virtual": 2576644
+		},
+		"bytes_upload": 3801920
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+issue, git commit (#N_ISSUE) non scrivere fix senno' lo chiude
+
+etichette issue:
+    domande: feedback needed
+    in progress: se ci sto lavorando - senno' farlo velocemente
+    priority ticket e' importante
+
+scrivere nel gruppo
+
+github fork nuovo
