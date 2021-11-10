@@ -1045,7 +1045,6 @@ print [[/lua/get_arp_data.lua', { ifid: "]] print(ifId.."") print ('", '..hostin
 	print [[
 
 		}
-
 	    </script><p>
 	]]
 
@@ -1440,6 +1439,8 @@ elseif((page == "ndpi")) then
 
       print[[
 
+         <div id="apexchart"></div>
+
 	<script type='text/javascript'>
 	       window.onload=function() {]]
 
@@ -1450,6 +1451,40 @@ elseif((page == "ndpi")) then
 ]]
       end
 
+      -- CUSTOM FOR APEXCHARTs
+      print[[
+
+         var options = {
+            series: [44, 55, 13, 33],
+            chart: {
+            width: 380,
+            type: 'donut',
+          },
+          dataLabels: {
+            enabled: false
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                show: false
+              }
+            }
+          }],
+          legend: {
+            position: 'right',
+            offsetY: 0,
+            height: 230,
+          }
+          };
+  
+          var chart = new ApexCharts(document.querySelector("#apexchart"), options);
+          chart.render();
+      ]]
+      
       print[[ do_pie("#topApplicationProtocols", ']]
       print (ntop.getHttpPrefix())
    print [[/lua/rest/v2/get/host/l7/stats.lua', { ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
@@ -2664,5 +2699,12 @@ print [[
    </script>
     ]]
 end
+
+
+-- CUSTOM SCRIPT IMPORT (because is minified in deps.min.js) (by diesys)
+print[[
+   <script type='text/javascript' src='/js/pie-chart-devel.js' defer></script>
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts" defer></script>
+]]
 
 dofile(dirs.installdir .. "/scripts/lua/inc/footer.lua")
