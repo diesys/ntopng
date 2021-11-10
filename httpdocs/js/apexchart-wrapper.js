@@ -34,10 +34,8 @@ function apexc_label(bool='true') {
 	return {dataLabels: {enabled: bool == 'true'}}
 }
 
-//// unify objects to have a custom options each time
-// example:
-// chart = {...data_series, ...data_labels, 
-// options	...apexc_chart('donut'), ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
+//// unify objects to have a custom options each time as
+// chart = {...{series:[data]}, ...{series:[labels]}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
 
 
 // Wrapper function
@@ -60,28 +58,8 @@ function PieChart(name, update_url, url_params, units, refresh) {
 	this.refresh = refresh;
 	this.pieInterval;
 
-	// var pieData = [];
-	// var oldPieData = [];
-	// var filteredPieData = [];
-	// var rsp = create_pie_chart(name, units);
-	// var arc_group = rsp[0];
-	// var donut = rsp[1];
-	// var totalValue = rsp[2];
-	// var totalUnits = rsp[3];
-	// var color = rsp[4];
-	// var tweenDuration = rsp[5];
-	// var arc = rsp[6];
-	// var label_group = rsp[7];
-	// var center_group = rsp[8];
-	// var r = rsp[9];
-	// var textOffset = rsp[10];
-
-
 	// to run each time data is generated
 	this.update = function () {
-		// console.log(this.name);
-		// console.log(this.url_params);
-
 		$.ajax({
 			type: 'GET',
 			url: this.update_url,
@@ -96,13 +74,13 @@ function PieChart(name, update_url, url_params, units, refresh) {
 	
 				if (parsed_content)
 					console.log(parsed_content.rsp)
-					// update_pie_chart(parsed_content);
+					// UPDATE CHART HERE
 			}
 		});
 	}
 
+	// first update
 	this.update();
-
 }
 
 // ///////////////////////////////////////////////////////////

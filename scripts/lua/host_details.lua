@@ -1454,6 +1454,7 @@ elseif((page == "ndpi")) then
       -- CUSTOM FOR APEXCHARTs
       print[[
          chart_opt = {...{series: [1,2,5,6,13,22]}, ...{'labels': ['apple','mango','banana','ciao', 'miai','ioao']}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
+         
          var chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_opt);
          chart.render();
       ]]
@@ -2676,7 +2677,7 @@ end
 
 -- CUSTOM SCRIPT IMPORT (because is minified in deps.min.js) (by diesys)
 print[[
-   <script type='text/javascript' src='/js/pie-chart-devel.js' defer></script>
+   <script type='text/javascript' src='/js/apexchart-wrapper.js' defer></script>
    <script src="https://cdn.jsdelivr.net/npm/apexcharts" defer></script>
 ]]
 
