@@ -1460,23 +1460,24 @@ elseif((page == "ndpi")) then
          top_app_proto_chart.render();
          top_app_categ_chart.render();
          top_app_breed_chart.render();
-      ]]
+      }
+   ]]
       
-      print[[ do_pie("#topApplicationProtocols", ']]
-      print (ntop.getHttpPrefix())
-   print [[/lua/rest/v2/get/host/l7/stats.lua', { ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+   --    print[[ do_pie("#topApplicationProtocols", ']]
+   --    print (ntop.getHttpPrefix())
+   -- print [[/lua/rest/v2/get/host/l7/stats.lua', { ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
 
-				   do_pie("#topApplicationCategories", ']]
-      print (ntop.getHttpPrefix())
-      print [[/lua/rest/v2/get/host/l7/stats.lua', { ndpi_category: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+	-- 			   do_pie("#topApplicationCategories", ']]
+   --    print (ntop.getHttpPrefix())
+   --    print [[/lua/rest/v2/get/host/l7/stats.lua', { ndpi_category: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
 
-				   do_pie("#topApplicationBreeds", ']]
-      print (ntop.getHttpPrefix())
-      print [[/lua/rest/v2/get/host/l7/stats.lua', { breed: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+	-- 			   do_pie("#topApplicationBreeds", ']]
+   --    print (ntop.getHttpPrefix())
+   --    print [[/lua/rest/v2/get/host/l7/stats.lua', { breed: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
 
 
-				}
-
+	-- 			}]]
+print[[
 function update_ndpi_table() {
   $.ajax({
     type: 'GET',
