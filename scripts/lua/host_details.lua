@@ -1490,6 +1490,27 @@ elseif((page == "ndpi")) then
 	-- 			}]]
 
 
+-- maybe the page could be written like this
+--   if(direction ~= nil) then
+--      filter = ", sflow_filter: '"..direction.."'"
+--   else 
+--      filter = "" end
+--
+--   function update_ndpi_table() {
+--      $.ajax({
+--         type: 'GET',
+--         url: ']]..ntop.getHttpPrefix()..[[/lua/host_details_ndpi.lua',
+--         data: { ifid: "1",
+--                 host: "]]..hostinfo2json(host_info)..filter..[[" },
+--                 success: function(content) {
+--                    $('#host_details_ndpi_applications_tbody').html(content);
+--                    // Let the TableSorter plugin know that we updated the table
+--                    $('#h_ndpi_tbody').trigger("update");
+--               }
+--      });
+--   }
+
+
 print[[
 function update_ndpi_table() {
   $.ajax({
