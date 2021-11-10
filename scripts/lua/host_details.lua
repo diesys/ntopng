@@ -1438,9 +1438,6 @@ elseif((page == "ndpi")) then
 ]]
 
       print[[
-
-         <div id="apexchart"></div>
-
 	<script type='text/javascript'>
 	       window.onload=function() {]]
 
@@ -1453,10 +1450,16 @@ elseif((page == "ndpi")) then
 
       -- CUSTOM FOR APEXCHARTs
       print[[
-         chart_opt = {...{series: [1,2,5,6,13,22]}, ...{'labels': ['apple','mango','banana','ciao', 'miai','ioao']}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
+         chart_top_app_proto_opt = {...{series: [13,32,15,46,3,22]}, ...{'labels': ['apple','mango','banana','ciao', 'miai','ioao']}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
+         chart_top_app_categ_opt = {...{series: [1,20,5,61,33,2]}, ...{'labels': ['apple1','mango3','banana4','ciao5', 'miai6','ioao8']}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend('none'), ...apexc_responsive}
+         chart_top_app_breed_opt = {...{series: [-1,-2,50,6,3,33]}, ...{'labels': ['apple2','mango3','banana4','ciao5', 'miai6','ioao8']}, ...apexc_chart('pie'), ...apexc_label(), ...apexc_legend('none'), ...apexc_responsive}
          
-         var chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_opt);
-         chart.render();
+         var top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt);
+         var top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt);
+         var top_app_breed_chart = new ApexCharts(document.querySelector("#topApplicationBreeds"), chart_top_app_breed_opt);
+         top_app_proto_chart.render();
+         top_app_categ_chart.render();
+         top_app_breed_chart.render();
       ]]
       
       print[[ do_pie("#topApplicationProtocols", ']]

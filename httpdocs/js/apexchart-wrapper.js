@@ -1,5 +1,4 @@
-// creating partial configuration for better custom use of apex charts api
-
+// Partial configurations/functions for cleaner custom use of apexcharts api
 const apexc_responsive = [{
 	breakpoint: 480,
 	options: {
@@ -11,36 +10,57 @@ const apexc_responsive = [{
 }]
 
 function apexc_chart(chart) {
+	// global configuration
+	chart_conf = {chart: {width: 380}}
+
 	// some custom presets
-	pie = {chart: {width: 380, type: 'pie'}}
-	donut = {chart: {width: 380, type: 'donut'}}
+	pie = {chart: {type: 'pie'}}
+	donut = {chart: {type: 'donut'}}
 
 	if(chart == 'donut')
-		return donut
+		return {...chart_conf,...donut}
+	else if(chart == 'pie')
+		return {...chart_conf,...pie}
 }
 
-function apexc_legend(side='right', offset=0) {
+function apexc_legend(side='right') {
+	// global configuration
+	legend_conf = {legend: {offsetY: 0}}
+
 	// some custom presets
-	right_conf ={legend: {position: 'right', offsetY: offset}} 
-	left_conf ={legend: {position: 'left', offsetY: offset}}
+	right_conf = {legend: {position: 'right'}} 
+	left_conf = {legend: {position: 'left'}}
+	none_conf = {legend: {show: false}}
 
 	if(side == 'right')
-		return right_conf
+		return {...legend_conf,...right_conf}
 	else if(side == 'left')
-		return left_conf
+		return {...legend_conf,...left_conf}
+	else if(side == 'none')
+		return {...legend_conf,...none_conf}
 }
 
 function apexc_label(bool='true') {
 	return {dataLabels: {enabled: bool == 'true'}}
 }
 
+
 //// unify objects to have a custom options each time as
-// chart = {...{series:[data]}, ...{series:[labels]}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
+// chart = {...{series:[data]}, ...{series:[labels]}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend_side(), ...apexc_responsive}
 
 
-// Wrapper function
+// Wrapper & self-update callback function
 function do_pie(name, update_url, url_params, units, refresh) {
 	var pie = new PieChart(name, update_url, url_params, units, refresh);
+
+	// update with jquery from external json, example
+	// var url = 'http://my-json-server.typicode.com/apexcharts/apexcharts.js/yearly';
+	// $.getJSON(url, function(response) {
+	// 	chart.updateSeries([{
+	// 		name: 'nome',
+	// 		data: response
+	// 	}])
+	// });
 
 	// if (refresh)
 		// pie.setInterval(setInterval(function () { pie.update(); }, refresh));
