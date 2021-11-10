@@ -1,14 +1,4 @@
 // Partial configurations/functions for cleaner custom use of apexcharts api
-const apexc_responsive = [{
-	breakpoint: 480,
-	options: {
-	  chart: {
-		width: 200},
-	  legend: {
-		show: false}
-	}
-}]
-
 function apexc_chart(chart) {
 	// global configuration
 	chart_conf = {chart: {width: 380}}
@@ -21,6 +11,29 @@ function apexc_chart(chart) {
 		return {...chart_conf,...donut}
 	else if(chart == 'pie')
 		return {...chart_conf,...pie}
+}
+
+const apexc_responsive = [{
+	breakpoint: 480,
+	options: {
+	  chart: {
+		width: 200},
+	  legend: {
+		show: false}
+	}
+}]
+
+function apexc_theme(palette='3') {
+	// using a HEX color for monochrome palette, the check maybe too simple?
+	if(palette[0] == '#' && palette.lenght < 8)
+		palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'light', shadeIntensity: 0.5}}}
+	// default palettes from 1 -> 10: https://apexcharts.com/docs/options/theme#palette
+	else if(palette > 1 && palette < 11)
+		palette_conf = {theme: {palette: 'palette'+palette }}
+	else
+		palette_conf = {theme: {palette: 'palette3' }}
+
+	return palette_conf
 }
 
 function apexc_legend(side='right') {
