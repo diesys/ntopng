@@ -28,7 +28,7 @@ function apexc_theme(palette='3') {
 	if(palette[0] == '#' && palette.lenght < 8)
 		palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'light', shadeIntensity: 0.5}}}
 	// default palettes from 1 -> 10: https://apexcharts.com/docs/options/theme#palette
-	else if(palette > 1 && palette < 11)
+	else if(palette > 0 && palette < 11)
 		palette_conf = {theme: {palette: 'palette'+palette }}
 	else
 		palette_conf = {theme: {palette: 'palette3' }}
