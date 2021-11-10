@@ -1453,36 +1453,9 @@ elseif((page == "ndpi")) then
 
       -- CUSTOM FOR APEXCHARTs
       print[[
-
-         var options = {
-            series: [44, 55, 13, 33],
-            chart: {
-            width: 380,
-            type: 'donut',
-          },
-          dataLabels: {
-            enabled: false
-          },
-          responsive: [{
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200
-              },
-              legend: {
-                show: false
-              }
-            }
-          }],
-          legend: {
-            position: 'right',
-            offsetY: 0,
-            height: 230,
-          }
-          };
-  
-          var chart = new ApexCharts(document.querySelector("#apexchart"), options);
-          chart.render();
+         chart_opt = {...{series: [1,2,5,6,13,22]}, ...{'labels': ['apple','mango','banana','ciao', 'miai','ioao']}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
+         var chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_opt);
+         chart.render();
       ]]
       
       print[[ do_pie("#topApplicationProtocols", ']]
