@@ -1453,16 +1453,17 @@ elseif((page == "ndpi")) then
          chart_top_app_proto_opt = {...{series: [13,32,15,46,3,22]}, 
                                     ...{'labels': ['apple','mango','banana','ciao', 'miai','ioao']}, 
                                     ...apexc_chart('donut'), 
-                                    ...apexc_theme('4'),
+                                    ...apexc_theme('6'),
                                     ...apexc_label(), ...apexc_legend(), ...apexc_responsive}
          chart_top_app_categ_opt = {...{series: [1,20,5,61,33,2]}, 
                                     ...{'labels': ['apple1','mango3','banana4','ciao5', 'miai6','ioao8']}, 
-                                    ...apexc_chart('donut'), 
+                                    ...apexc_chart('donut'),
+                                    ...apexc_theme('1'), 
                                     ...apexc_label(), ...apexc_legend('none'), ...apexc_responsive}
          chart_top_app_breed_opt = {...{series: [-1,-2,50,6,3,33]},
                                     ...{'labels': ['apple2','mango3','banana4','ciao5', 'miai6','ioao8']},
                                     ...apexc_chart('pie'), 
-                                    ...apexc_theme('2'), 
+                                    ...apexc_theme('#42eaf0'),
                                     ...apexc_label(), ...apexc_legend('none'), ...apexc_responsive}
          
          var top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt);

@@ -1,16 +1,16 @@
 // Partial configurations/functions for cleaner custom use of apexcharts api
 function apexc_chart(chart) {
 	// global configuration
-	chart_conf = {chart: {width: 380}}
+	chart_width = '100%' // int or str (with % or px)
 
 	// some custom presets
-	pie = {chart: {type: 'pie'}}
-	donut = {chart: {type: 'donut'}}
+	pie = {chart: {type: 'pie', width: chart_width}}
+	donut = {chart: {type: 'donut', width: chart_width}}
 
 	if(chart == 'donut')
-		return {...chart_conf,...donut}
+		return donut
 	else if(chart == 'pie')
-		return {...chart_conf,...pie}
+		return pie
 }
 
 const apexc_responsive = [{
@@ -25,8 +25,8 @@ const apexc_responsive = [{
 
 function apexc_theme(palette='3') {
 	// using a HEX color for monochrome palette, the check maybe too simple?
-	if(palette[0] == '#' && palette.lenght < 8)
-		palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'light', shadeIntensity: 0.5}}}
+	if(palette[0] == '#')
+		palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'dark', shadeIntensity: .7}}}
 	// default palettes from 1 -> 10: https://apexcharts.com/docs/options/theme#palette
 	else if(palette > 0 && palette < 11)
 		palette_conf = {theme: {palette: 'palette'+palette }}
