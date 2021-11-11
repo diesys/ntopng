@@ -1,70 +1,73 @@
 // Partial configurations/functions for cleaner custom use of apexcharts api
 function apexc_chart(chart) {
 	// global configuration
-	chart_width = '100%' // int or str (with % or px)
+	var chart_width = '100%' // int or str (with % or px)
 
 	// some custom presets
-	pie = {chart: {type: 'pie', width: chart_width}}
-	donut = {chart: {type: 'donut', width: chart_width}}
+	var pie_conf = {chart: {type: 'pie', width: chart_width}}
+	var donut_conf = {chart: {type: 'donut', width: chart_width}}
 
 	if(chart == 'donut')
-		return donut
+		return donut_conf
 	else if(chart == 'pie')
-		return pie
+		return pie_conf
 }
 
-const apexc_responsive = [{
-	breakpoint: 480,
-	options: {
-	  chart: {
-		width: 200},
-	  legend: {
-		show: false}
-	}
-}]
-
-function apexc_theme(palette='3') {
-	// using a HEX color for monochrome palette, the check maybe too simple?
+function apexc_theme(palette=3) {
+	// using a HEX color for monochrome palette, the check maybe too simple (#0000000, may give an error)?
 	if(palette[0] == '#')
-		palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'dark', shadeIntensity: .7}}}
-	// default palettes from 1 -> 10: https://apexcharts.com/docs/options/theme#palette
+		var palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'dark', shadeIntensity: .7}}}
+	// default palettes https://apexcharts.com/docs/options/theme#palette
 	else if(palette > 0 && palette < 11)
-		palette_conf = {theme: {palette: 'palette'+palette }}
+		var palette_conf = {theme: {palette: 'palette'+palette }}
 	else
-		palette_conf = {theme: {palette: 'palette3' }}
+		var palette_conf = {theme: {palette: 'palette3' }}
 
 	return palette_conf
 }
 
 function apexc_legend(side='right') {
 	// global configuration
-	legend_conf = {legend: {offsetY: 0}}
-
+	var legend_offsetY = 0
+	
 	// some custom presets
-	right_conf = {legend: {position: 'right'}} 
-	left_conf = {legend: {position: 'left'}}
-	none_conf = {legend: {show: false}}
+	var top_conf = {legend: {position: 'top', offsetY: legend_offsetY}} 
+	var bottom_conf = {legend: {position: 'bottom', offsetY: legend_offsetY}} 
+	var right_conf = {legend: {position: 'right', offsetY: legend_offsetY}} 
+	var left_conf = {legend: {position: 'left', offsetY: legend_offsetY}}
+	var none_conf = {legend: {show: false, offsetY: legend_offsetY}}
 
 	if(side == 'right')
-		return {...legend_conf,...right_conf}
+		return right_conf
 	else if(side == 'left')
-		return {...legend_conf,...left_conf}
+		return left_conf
+	else if(side == 'bottom')
+		return bottom_conf
+	else if(side == 'top')
+		return top_conf
 	else if(side == 'none')
-		return {...legend_conf,...none_conf}
+		return none_conf
 }
 
 function apexc_label(bool='true') {
 	return {dataLabels: {enabled: bool == 'true'}}
 }
 
+const apexc_responsive = [{
+	breakpoint: 480,
+	options: {chart: {width: 200}, legend: {show: false}}
+}]
+
 
 //// unify objects to have a custom options each time as
 // chart = {...{series:[data]}, ...{series:[labels]}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend_side(), ...apexc_responsive}
 
 
-// Wrapper & self-update callback function
+// Wrapper & self-update function
 function do_pie(name, update_url, url_params, units, refresh) {
 	var pie = new PieChart(name, update_url, url_params, units, refresh);
+	if (refresh)
+		pie.setInterval(setInterval(function () { pie.update(); }, refresh));
 
 	// update with jquery from external json, example
 	// var url = 'http://my-json-server.typicode.com/apexcharts/apexcharts.js/yearly';
@@ -74,9 +77,6 @@ function do_pie(name, update_url, url_params, units, refresh) {
 	// 		data: response
 	// 	}])
 	// });
-
-	// if (refresh)
-		// pie.setInterval(setInterval(function () { pie.update(); }, refresh));
 
 	// Return new class instance, with
 	return pie;
@@ -91,6 +91,22 @@ function PieChart(name, update_url, url_params, units, refresh) {
 	this.refresh = refresh;
 	this.pieInterval;
 
+	var pieData = [];
+	var oldPieData = [];
+	var filteredPieData = [];
+	// var rsp = create_pie_chart(name, units);
+	// var arc_group = rsp[0];
+	// var donut = rsp[1];
+	// var totalValue = rsp[2];
+	// var totalUnits = rsp[3];
+	// var color = rsp[4];
+	// var tweenDuration = rsp[5];
+	// var arc = rsp[6];
+	// var label_group = rsp[7];
+	// var center_group = rsp[8];
+	// var r = rsp[9];
+	// var textOffset = rsp[10];
+
 	// to run each time data is generated
 	this.update = function () {
 		$.ajax({
@@ -99,6 +115,7 @@ function PieChart(name, update_url, url_params, units, refresh) {
 			data: this.url_params,
 			success: function (content) {
 				let parsed_content;
+				// console.log(content)
 
 				if (typeof (content) == "object")
 					parsed_content = content;
@@ -106,20 +123,34 @@ function PieChart(name, update_url, url_params, units, refresh) {
 					parsed_content = jQuery.parseJSON(content);
 	
 				if (parsed_content)
-					console.log(parsed_content.rsp)
+					console.log(parsed_content)
 					// UPDATE CHART HERE
 			}
 		});
 	}
 
-	// first update
+	// Needed to draw the pie immediately
 	this.update();
+
+	// var updateInterval = window.setInterval(update, refresh);
+	function compare_by_label(a, b) {
+		if (a.label < b.label) {
+			return -1;
+		} else if (a.label > b.label) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }
 
-// ///////////////////////////////////////////////////////////
-// // PUBLIC FUNCIONTS ////////////////////////////////////
-// ///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+///// PUBLIC FUNCTIONS ///////////////////////////////////////
+//////////////////////////////////////////////////////////////
 
+PieChart.prototype.setInterval = function (p_pieInterval) {
+	this.pieInterval = p_pieInterval;
+}
 
 // PieChart.prototype.setUrlParams = function (url_params) {
 // 	this.url_params = url_params;
@@ -131,10 +162,6 @@ function PieChart(name, update_url, url_params, units, refresh) {
 // 	this.update();
 // 	this.startInterval();
 // }
-
-PieChart.prototype.setInterval = function (p_pieInterval) {
-	this.pieInterval = p_pieInterval;
-}
 
 // PieChart.prototype.stopInterval = function () {
 // 	//disabled graph interval
