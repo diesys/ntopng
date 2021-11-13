@@ -4,78 +4,34 @@
 // 
 // 
 
-// Partial configurations/functions for cleaner custom use of apexcharts api
-function apexc_chart(chart) {
+// ---- TYPE
+function apexc_chart(chart_type, chart_width='100%') {
 	// global configuration
-	var chart_width = '100%' // int or str (with % or px)
+	// var chart_width = '100%' // int or str (with % or px)
 
-	// some custom presets
-	var pie_conf = {chart: {type: 'pie', width: chart_width}}
-	var donut_conf = {chart: {type: 'donut', width: chart_width}}
-
-	// type of chart
-	if(chart == 'donut')
-		return donut_conf
-	else if(chart == 'pie')
-		return pie_conf
-
-
+	if (['donut', 'pie', 'radialbar'].indexOf(chart_type) >= 0)
+		return {chart: {type: chart_type, width: chart_width}}
+	
 	// /lua/rest/v2/get/host/data.lua?ifid=1&host=192.168.1.127
 	// this.update = function () {
-	// 	// console.log(this.name);
-	// 	// console.log(this.url_params);
-	// 	$.ajax({
-	// 		type: 'GET',
-	// 		url: this.update_url,
-	// 		data: this.url_params,
-	// 		success: function (content) {
-	// 			let parsed_content;
-	// 			if (typeof (content) == "object")
-	// 				parsed_content = content;
-	// 			else if (typeof (content) == "string")
-	// 				parsed_content = jQuery.parseJSON(content);
-
-	// 			if (parsed_content)
-	// 				update_pie_chart(parsed_content);
-	// 		}
-	// 	});
+	//	
 	// }
 }
 
-function apexc_theme(palette=3) {
-	// using a HEX color for monochrome palette, the check maybe too simple (#0000000, may give an error)?
-	if(palette[0] == '#')
-		var palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'dark', shadeIntensity: .7}}}
-	// default palettes https://apexcharts.com/docs/options/theme#palette
-	else if(palette > 0 && palette < 11)
-		var palette_conf = {theme: {palette: `palette${palette}`}}
-	else
-		var palette_conf = {theme: {palette: 'palette3' }}
-
-	return palette_conf
+// ---- THEME/PALETTE
+function apexc_theme(palette=1, monochrome_shade='light') {
+	if(palette[0] == '#' && !parseInt(palette))	// HEX color for monochrome palette
+		return {theme: {monochrome: {enabled: true, color: palette, shadeTo: monochrome_shade, shadeIntensity: .7}}}
+	else if(palette > 0 && palette < 11)	// default palette https://apexcharts.com/docs/options/theme#palette
+		return {theme: {palette: `palette${palette}`}}
 }
 
-function apexc_legend(side='right') {
-	// global configuration
-	var legend_offsetY = 0
-	
-	// some custom presets
-	var top_conf = {legend: {position: 'top', offsetY: legend_offsetY}} 
-	var bottom_conf = {legend: {position: 'bottom', offsetY: legend_offsetY}} 
-	var right_conf = {legend: {position: 'right', offsetY: legend_offsetY}} 
-	var left_conf = {legend: {position: 'left', offsetY: legend_offsetY}}
-	var none_conf = {legend: {show: false, offsetY: legend_offsetY}}
-
-	if(side == 'right')
-		return right_conf
-	else if(side == 'left')
-		return left_conf
-	else if(side == 'bottom')
-		return bottom_conf
-	else if(side == 'top')
-		return top_conf
-	else if(side == 'none')
-		return none_conf
+// ---- LEGEND
+function apexc_legend(side='bottom') {
+    if (['bottom', 'right', 'top', 'left'].indexOf(side) >= 0)
+        return {legend: {position: side, offsetY: 0}}
+    else if(side == 'none')
+        return {legend: {show: false}}
 }
 
 function apexc_label(bool='true') {
@@ -95,11 +51,11 @@ const apexc_responsive = [{
 // Wrapper & self-update function
 function do_pie(name, update_url, url_params, units, refresh) {
 	// var pie = new PieChart(name, update_url, url_params, units, refresh);
+	
 	if (refresh)
 		pie.setInterval(setInterval(function () { pie.update(); }, refresh));
 
-	// update with jquery from external json, example
-
+	// update function here
 
 	// Return new class instance, with
 	return pie;
@@ -115,15 +71,10 @@ function getNewData(url, data) {
 		url: url,
 		data: data,
 		success: function (content) {
-			if (typeof (content) == "object"){
-				new_data = content;
-			} else if (typeof (content) == "string") {
-				new_data = jQuery.parseJSON(content);
-			}
+			new_data = typeof(content) == "object" ? content : jQuery.parseJSON(content)
 
-			if (new_data) {
+			if(new_data) {
 				update_apexc(new_data.rsp, 'ndpi')
-				// console.log(new_data.rsp.ndpi)	
 			}
 		}
 	});
@@ -131,6 +82,7 @@ function getNewData(url, data) {
 
 function update_apexc(data_rsp, page_key) {
 	// var new_data = data_rsp[page_key]
+	console.log(data_rsp)
 	data = new Array(data_rsp[page_key])
 	updated_data = {series:[],labels:[]}
 
@@ -142,18 +94,18 @@ function update_apexc(data_rsp, page_key) {
 		for (var name in element){
 			// updated_data['labels'].push(name)
 			// updated_data['series'].push(element[name]['bytes.sent'])
-
-			datatest[name] = parseFloat(element[name]['bytes.sent'])
+		
+			// datatest[name] = element[name]['bytes.sent']
+			datatest[name] = element[name]['bytes.sent']
 		}
 	});
 
 	console.log(datatest)
 
 	//  -----------------------------------------------------
-	// VA CONTROLLATA MEGLIO NON FUNZIONA E POI ANDREBBE FATTA ASSIEME ALL'ORDINAMENTO
 	// sorts in ascending order
 	var sorted_labels = Object.keys(datatest).sort( function(keyA, keyB) {
-		return (datatest[keyA] + 0) < datatest[keyB];
+		return datatest[keyA] < datatest[keyB];
 	});
 
 	// sorted_datatest = {series: Object.values(datatest).sort(), labels: sorted_labels, animate: false}
@@ -168,6 +120,10 @@ function update_apexc(data_rsp, page_key) {
 
 getNewData(url_apex, data_apex)
 
+
+
+////////////////////////// OLD LIB //////////////////////////
+
 function PieChart(name, update_url, url_params, units, refresh) {
 	// Add object properties like this
 	this.name = name;
@@ -180,18 +136,18 @@ function PieChart(name, update_url, url_params, units, refresh) {
 	var pieData = [];
 	var oldPieData = [];
 	var filteredPieData = [];
-	// var rsp = create_pie_chart(name, units);
-	// var arc_group = rsp[0];
-	// var donut = rsp[1];
-	// var totalValue = rsp[2];
-	// var totalUnits = rsp[3];
-	// var color = rsp[4];
-	// var tweenDuration = rsp[5];
-	// var arc = rsp[6];
-	// var label_group = rsp[7];
-	// var center_group = rsp[8];
-	// var r = rsp[9];
-	// var textOffset = rsp[10];
+	var rsp = create_pie_chart(name, units);
+	var arc_group = rsp[0];
+	var donut = rsp[1];
+	var totalValue = rsp[2];
+	var totalUnits = rsp[3];
+	var color = rsp[4];
+	var tweenDuration = rsp[5];
+	var arc = rsp[6];
+	var label_group = rsp[7];
+	var center_group = rsp[8];
+	var r = rsp[9];
+	var textOffset = rsp[10];
 
 	// to run each time data is generated
 	this.update = function () {
@@ -218,7 +174,7 @@ function PieChart(name, update_url, url_params, units, refresh) {
 	// Needed to draw the pie immediately
 	this.update();
 
-	// var updateInterval = window.setInterval(update, refresh);
+	var updateInterval = window.setInterval(update, refresh);
 
 }
 
@@ -230,22 +186,22 @@ PieChart.prototype.setInterval = function (p_pieInterval) {
 	this.pieInterval = p_pieInterval;
 }
 
-// PieChart.prototype.setUrlParams = function (url_params) {
-// 	this.url_params = url_params;
-// 	this.forceUpdate();
-// }
+PieChart.prototype.setUrlParams = function (url_params) {
+	this.url_params = url_params;
+	this.forceUpdate();
+}
 
-// PieChart.prototype.forceUpdate = function (url_params) {
-// 	this.stopInterval();
-// 	this.update();
-// 	this.startInterval();
-// }
+PieChart.prototype.forceUpdate = function (url_params) {
+	this.stopInterval();
+	this.update();
+	this.startInterval();
+}
 
-// PieChart.prototype.stopInterval = function () {
-// 	//disabled graph interval
-// 	clearInterval(this.pieInterval);
-// }
+PieChart.prototype.stopInterval = function () {
+	//disabled graph interval
+	clearInterval(this.pieInterval);
+}
 
-// PieChart.prototype.startInterval = function () {
-// 	this.pieInterval = setInterval(this.update(), this.refresh)
-// }
+PieChart.prototype.startInterval = function () {
+	this.pieInterval = setInterval(this.update(), this.refresh)
+}
