@@ -1466,13 +1466,14 @@ elseif((page == "ndpi")) then
                                         ...apexc_theme('#42eaf0'),
                                         ...apexc_label(), ...apexc_legend('top'), ...apexc_responsive}
          
-         var top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt);
-         var top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt);
-         var top_app_breed_chart = new ApexCharts(document.querySelector("#topApplicationBreeds"), chart_top_app_breed_opt);
+         top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt);
+         top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt);
+         top_app_breed_chart = new ApexCharts(document.querySelector("#topApplicationBreeds"), chart_top_app_breed_opt);
          top_app_proto_chart.render();
          top_app_categ_chart.render();
          top_app_breed_chart.render();
       }
+
    ]]
       
    --    print[[ do_pie("#topApplicationProtocols", ']]
@@ -2693,6 +2694,7 @@ end
 
 
 -- CUSTOM SCRIPT IMPORT (because is minified in deps.min.js) (by diesys)
+-- <script type='text/javascript' src='/js/pie-chart.js' defer></script>
 print[[
    <script type='text/javascript' src='/js/apexchart-wrapper.js' defer></script>
    <script src="https://cdn.jsdelivr.net/npm/apexcharts" defer></script>
