@@ -1,16 +1,46 @@
+// 
+// 
+// http://localhost:3000/lua/rest/v2/get/host/data.lua?ifid=1&host=192.168.1.127
+// 
+// 
+
 // Partial configurations/functions for cleaner custom use of apexcharts api
 function apexc_chart(chart) {
 	// global configuration
 	var chart_width = '100%' // int or str (with % or px)
 
+
 	// some custom presets
 	var pie_conf = {chart: {type: 'pie', width: chart_width}}
 	var donut_conf = {chart: {type: 'donut', width: chart_width}}
+
 
 	if(chart == 'donut')
 		return donut_conf
 	else if(chart == 'pie')
 		return pie_conf
+
+
+	// /lua/rest/v2/get/host/data.lua?ifid=1&host=192.168.1.127
+	// this.update = function () {
+	// 	// console.log(this.name);
+	// 	// console.log(this.url_params);
+	// 	$.ajax({
+	// 		type: 'GET',
+	// 		url: this.update_url,
+	// 		data: this.url_params,
+	// 		success: function (content) {
+	// 			let parsed_content;
+	// 			if (typeof (content) == "object")
+	// 				parsed_content = content;
+	// 			else if (typeof (content) == "string")
+	// 				parsed_content = jQuery.parseJSON(content);
+
+	// 			if (parsed_content)
+	// 				update_pie_chart(parsed_content);
+	// 		}
+	// 	});
+	// }
 }
 
 function apexc_theme(palette=3) {
@@ -65,22 +95,78 @@ const apexc_responsive = [{
 
 // Wrapper & self-update function
 function do_pie(name, update_url, url_params, units, refresh) {
-	var pie = new PieChart(name, update_url, url_params, units, refresh);
+	// var pie = new PieChart(name, update_url, url_params, units, refresh);
 	if (refresh)
 		pie.setInterval(setInterval(function () { pie.update(); }, refresh));
 
 	// update with jquery from external json, example
-	// var url = 'http://my-json-server.typicode.com/apexcharts/apexcharts.js/yearly';
-	// $.getJSON(url, function(response) {
-	// 	chart.updateSeries([{
-	// 		name: 'nome',
-	// 		data: response
-	// 	}])
-	// });
+
 
 	// Return new class instance, with
 	return pie;
 }
+
+
+var url_apex='/lua/rest/v2/get/host/data.lua'
+var data_apex={ifid: '1', host: '192.168.1.127'}
+
+function getNewData(url, data) {
+	$.ajax({
+		type: 'GET',
+		url: url,
+		data: data,
+		success: function (content) {
+			if (typeof (content) == "object"){
+				new_data = content;
+			} else if (typeof (content) == "string") {
+				new_data = jQuery.parseJSON(content);
+			}
+
+			if (new_data) {
+				update_apexc(new_data.rsp, 'ndpi')
+				// console.log(new_data.rsp.ndpi)	
+			}
+		}
+	});
+}
+
+function update_apexc(data_rsp, page_key) {
+	// var new_data = data_rsp[page_key]
+	data = new Array(data_rsp[page_key])
+	updated_data = {series:[],labels:[]}
+
+	datatest = {}
+
+	// divides the array into two lists of data and labels
+	data.forEach(element => {
+		// console.log(element)
+		for (var name in element){
+			// updated_data['labels'].push(name)
+			// updated_data['series'].push(element[name]['bytes.sent'])
+
+			datatest[name] = element[name]['bytes.sent']
+		}
+	});
+
+	console.log(datatest)
+
+	//  -----------------------------------------------------
+	// VA CONTROLLATA MEGLIO NON FUNZIONA E POI ANDREBBE FATTA ASSIEME ALL'ORDINAMENTO
+	// sorts in ascending order
+	var sorted_labels = Object.keys(datatest).sort( function(keyA, keyB) {
+		return datatest[keyA] - datatest[keyB];
+	}); // returns ['confirm', 'delete', 'cancel']
+
+	sorted_datatest = {series: Object.values(datatest).sort(), labels: sorted_labels}
+	console.log(sorted_datatest)
+
+	top_app_proto_chart.updateOptions(sorted_datatest)
+	//  -----------------------------------------------------
+
+	// top_app_proto_chart.updateOptions({series: updated_data['series'], labels: updated_data['labels']})
+}
+
+getNewData(url_apex, data_apex)
 
 function PieChart(name, update_url, url_params, units, refresh) {
 	// Add object properties like this
