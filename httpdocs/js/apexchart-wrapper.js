@@ -9,12 +9,11 @@ function apexc_chart(chart) {
 	// global configuration
 	var chart_width = '100%' // int or str (with % or px)
 
-
 	// some custom presets
 	var pie_conf = {chart: {type: 'pie', width: chart_width}}
 	var donut_conf = {chart: {type: 'donut', width: chart_width}}
 
-
+	// type of chart
 	if(chart == 'donut')
 		return donut_conf
 	else if(chart == 'pie')
@@ -49,7 +48,7 @@ function apexc_theme(palette=3) {
 		var palette_conf = {theme: {monochrome: {enabled: true, color: palette, shadeTo: 'dark', shadeIntensity: .7}}}
 	// default palettes https://apexcharts.com/docs/options/theme#palette
 	else if(palette > 0 && palette < 11)
-		var palette_conf = {theme: {palette: 'palette'+palette }}
+		var palette_conf = {theme: {palette: `palette${palette}`}}
 	else
 		var palette_conf = {theme: {palette: 'palette3' }}
 
@@ -144,7 +143,7 @@ function update_apexc(data_rsp, page_key) {
 			// updated_data['labels'].push(name)
 			// updated_data['series'].push(element[name]['bytes.sent'])
 
-			datatest[name] = element[name]['bytes.sent']
+			datatest[name] = parseFloat(element[name]['bytes.sent'])
 		}
 	});
 
@@ -154,10 +153,11 @@ function update_apexc(data_rsp, page_key) {
 	// VA CONTROLLATA MEGLIO NON FUNZIONA E POI ANDREBBE FATTA ASSIEME ALL'ORDINAMENTO
 	// sorts in ascending order
 	var sorted_labels = Object.keys(datatest).sort( function(keyA, keyB) {
-		return datatest[keyA] - datatest[keyB];
-	}); // returns ['confirm', 'delete', 'cancel']
+		return (datatest[keyA] + 0) < datatest[keyB];
+	});
 
-	sorted_datatest = {series: Object.values(datatest).sort(), labels: sorted_labels}
+	// sorted_datatest = {series: Object.values(datatest).sort(), labels: sorted_labels, animate: false}
+	sorted_datatest = {series: Object.values(datatest).sort((a, b) => b - a), labels: sorted_labels}
 	console.log(sorted_datatest)
 
 	top_app_proto_chart.updateOptions(sorted_datatest)
@@ -219,15 +219,7 @@ function PieChart(name, update_url, url_params, units, refresh) {
 	this.update();
 
 	// var updateInterval = window.setInterval(update, refresh);
-	function compare_by_label(a, b) {
-		if (a.label < b.label) {
-			return -1;
-		} else if (a.label > b.label) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+
 }
 
 //////////////////////////////////////////////////////////////

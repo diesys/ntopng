@@ -1450,8 +1450,8 @@ elseif((page == "ndpi")) then
 
       -- CUSTOM FOR APEXCHARTs
       print[[
-         var chart_top_app_proto_opt = {...{series: [13,32,15,46,3,22]}, 
-                                        ...{'labels': ['apple','mango','banana','ciao', 'miai','ioao']}, 
+         var chart_top_app_proto_opt = {...{series: []}, 
+                                        ...{'labels': []}, 
                                         ...apexc_chart('donut'), 
                                         ...apexc_theme('6'),
                                         ...apexc_label(), ...apexc_legend('bottom'), ...apexc_responsive}
@@ -1466,12 +1466,12 @@ elseif((page == "ndpi")) then
                                         ...apexc_theme('#42eaf0'),
                                         ...apexc_label(), ...apexc_legend('top'), ...apexc_responsive}
          
-         top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt);
-         top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt);
-         top_app_breed_chart = new ApexCharts(document.querySelector("#topApplicationBreeds"), chart_top_app_breed_opt);
-         top_app_proto_chart.render();
-         top_app_categ_chart.render();
-         top_app_breed_chart.render();
+         top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt)
+         top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt)
+         top_app_breed_chart = new ApexCharts(document.querySelector("#topApplicationBreeds"), chart_top_app_breed_opt)
+         top_app_proto_chart.render()
+         top_app_categ_chart.render()
+         top_app_breed_chart.render()
       }
 
    ]]
