@@ -1,4 +1,9 @@
-function NtopApexChart() {
+function NtopApexChart(type, theme, legend, label, data, api_url) {
+	// FORSE NE SERVONO MENO? O SI PASSA DIRETTAMENTE IL JSON CONFIG?
+
+	//// unify objects to have a custom options each time as
+	// chart = {...{series:[data]}, ...{series:[labels]}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend_side(), ...apexc_responsive}
+
 	// /lua/rest/v2/get/host/data.lua?ifid=1&host=192.168.1.127
 	// this.update = function () {
 	//	
@@ -7,7 +12,7 @@ function NtopApexChart() {
 
 // ---- TYPE
 function apexc_chart(chart_type, chart_width='100%') {
-	if (['donut', 'pie', 'radialbar'].indexOf(chart_type) >= 0)
+	if (['donut', 'pie', 'radialbar', 'polarArea'].indexOf(chart_type) >= 0)
 		return {chart: {type: chart_type, width: chart_width}}
 }
 
@@ -37,14 +42,10 @@ const apexc_responsive = [{
 }]
 
 
-//// unify objects to have a custom options each time as
-// chart = {...{series:[data]}, ...{series:[labels]}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend_side(), ...apexc_responsive}
-
 
 // Wrapper & self-update function
 function do_pie(name, update_url, url_params, units, refresh) {
 	// var pie = new PieChart(name, update_url, url_params, units, refresh);
-	
 	if (refresh)
 		pie.setInterval(setInterval(function () { pie.update(); }, refresh));
 
@@ -54,26 +55,32 @@ function do_pie(name, update_url, url_params, units, refresh) {
 	return pie;
 }
 
-
-var url_apex='/lua/rest/v2/get/host/data.lua'
-var data_apex={ifid: '1', host: '192.168.1.127'}
-
-function getNewData(url, data) {
-	$.ajax({type: 'GET', url: url, data: data,
+function getNewData(chart_obj, api_url, vars_url, page_key) {
+	$.ajax({type: 'GET', url: api_url, data: vars_url,
 		success: function (content) {
-			// parse the data if needed
+			console.log(api_url, vars_url, content)
+			// parse data into an obj, if needed
 			new_data = typeof(content) == "object" ? content : jQuery.parseJSON(content)
 			// updates the chart with the new data
 			if(new_data)
-				update_apexc(new_data.rsp, 'ndpi')
+				update_apexc(chart_obj, new_data.rsp, page_key)
 		}
 	});
 }
 
-function update_apexc(data_rsp, page_key) {
-	data = new Array(data_rsp[page_key])
-	updated_data = {series:[],labels:[]}
-	// console.log(data_rsp)
+function update_apexc(chart_obj, data_rsp, page_key) {
+	// DAFARE MEGLIO E AGGIUNGERE il limite al numero di cose nel grafico
+	// coi metodi interni, cosi ha gia' l'url giusto coi parametri giusti...
+
+	if(['ndpi', 'ndpi_categories'].indexOf(page_key) >= 0) {
+		data = new Array(data_rsp[page_key])
+		updated_data = {series:[], labels:[]}
+	} else { // now means "breed", in future will not be needed
+		data = new Array(data_rsp['ndpi'])
+		updated_data = {series:[], labels:[], breed:[]}
+	}
+	
+	console.log(data_rsp)
 	// console.log(data)
 
 	new_data = {}
@@ -91,12 +98,9 @@ function update_apexc(data_rsp, page_key) {
 
 	new_data = {series: Object.values(new_data).sort((a, b) => b - a), labels: sorted_labels}
 
-	top_app_proto_chart.updateOptions(new_data)
+	chart_obj.updateOptions(new_data)
 
 }
-
-getNewData(url_apex, data_apex)
-
 
 
 ////////////////////////// OLD LIB //////////////////////////
