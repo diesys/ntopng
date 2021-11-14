@@ -1,6 +1,17 @@
-function NtopApexChart(type, theme, legend, label, data, api_url) {
-	// FORSE NE SERVONO MENO? O SI PASSA DIRETTAMENTE IL JSON CONFIG?
+// Wrapper function
+function do_pie(name, update_url, url_params, refresh) {
+	// New class instance
+	// var pie = new PieChart(name, update_url, url_params, units, refresh);
+	if (refresh)
+		pie.setInterval(setInterval(function () { pie.update(); }, refresh));
 
+	return pie;
+}
+
+
+// FARE OPZIONI IN MODO TALE CHE POSSO PASSARLE COME VOGLIO IO A DIZIONARIO, E UNO DEI CAMPI E' IL DIZIONARIO PER APEX
+// il nuovo oggetto crea il dizionario di conf apex prima, poi scaricarsi i dati poi return
+function aChart(type, theme, legend, label, data, api_url) {
 	//// unify objects to have a custom options each time as
 	// chart = {...{series:[data]}, ...{series:[labels]}, ...chart_type('donut'), ...chart_label(), ...chart_legend_side(), ...chart_responsive}
 
@@ -52,21 +63,11 @@ function chart_label(bool='true') {
 	return {dataLabels: {enabled: bool == 'true'}}
 }
 
-const chart_animation = {
-	// Currently NO ANIMATION DEFAULT
+const chart_animation = {	// Currently NO ANIMATION DEFAULT
 	animations: {
 		enabled: true,
 		easing: 'easein',
-		speed: 200,
-		// animateGradually: {
-		// 	enabled: false,
-		// 	delay: 0
-		// },
-		// dynamicAnimation: {
-		// 	enabled: false,
-		// 	speed: 0
-		// }
-	}
+		speed: 200}
 }
 
 const chart_stroke = {
@@ -78,22 +79,15 @@ const chart_stroke = {
 }
 
 
-// Wrapper & self-update function
-function do_pie(name, update_url, url_params, units, refresh) {
-	// var pie = new PieChart(name, update_url, url_params, units, refresh);
-	if (refresh)
-		pie.setInterval(setInterval(function () { pie.update(); }, refresh));
-
-	// update function here
-
-	// Return new class instance, with
-	return pie;
-}
+// selects the first N items (if enough, MUST be ALREADY ordered) in Data and reduces the rest to "Others"
+var selectFirsts = (data, n) => data.series.length <= n ? D : ({
+	series: data.series.slice(0,n).concat(data.series.slice(n).reduce((x,y)=>parseFloat((x+y)))),
+	labels: data.labels.slice(0,n).concat('Others')
+})
 
 function getNewData(chart_obj, api_url, vars_url, page_key) {
 	$.ajax({type: 'GET', url: api_url, data: vars_url,
 		success: function (content) {
-			// console.log(api_url, vars_url, content)
 			// parse data into an obj, if needed
 			new_data = typeof(content) == "object" ? content : jQuery.parseJSON(content)
 			// updates the chart with the new data
@@ -104,7 +98,6 @@ function getNewData(chart_obj, api_url, vars_url, page_key) {
 }
 
 function update_apexc(chart_obj, data_rsp, page_key) {
-	// DAFARE MEGLIO E AGGIUNGERE il limite al numero di cose nel grafico
 	// coi metodi interni, cosi ha gia' l'url giusto coi parametri giusti...
 
 	if(['ndpi', 'ndpi_categories'].indexOf(page_key) >= 0) {
@@ -115,9 +108,6 @@ function update_apexc(chart_obj, data_rsp, page_key) {
 		updated_data = {series:[], labels:[], breed:[]}
 	}
 	
-	// console.log(data_rsp)
-	// console.log(data)
-
 	new_data = {}
 
 	// divides the array into two lists of data and labels
@@ -133,8 +123,9 @@ function update_apexc(chart_obj, data_rsp, page_key) {
 	});
 
 	// consruct and update the chart with the new data
-	chart_obj.updateOptions({series: Object.values(new_data).sort((a, b) => b - a), labels: sorted_labels})
-
+	new_data = {series: Object.values(new_data).sort((a, b) => b - a), labels: sorted_labels}
+	// keeps the first 6
+	chart_obj.updateOptions(selectFirsts(new_data, 7))
 }
 
 
