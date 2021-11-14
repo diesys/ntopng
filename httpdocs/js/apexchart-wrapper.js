@@ -18,11 +18,11 @@ const chart_responsive = [{
 // ---- TYPE
 function chart_type(chart_type, chart_width='100%') {
 	if (['donut', 'pie', 'radialbar', 'polarArea'].indexOf(chart_type) >= 0)
-		return {chart: {type: chart_type, width: chart_width}, stroke: {show: false}, colors: chart_colors, ...chart_suffix(' KB')}
+		return {chart: {type: chart_type, width: chart_width}, stroke: {show: false}, ...chart_suffix(' KB')}
 }
 
 // custom theme, because palette has only 5 colors
-const chart_colors = ['#208fdb', '#2bca80', '#fa4a80', '#fec019', '#ff5520', '#a71da0', '#a0e300', '#204070']
+const chart_palette = {colors: ['#208fdb', '#2bca80', '#fa4a80', '#fec019', '#ff5520', '#a71da0', '#a0e300', '#204070']}
 
 // ---- THEME/PALETTE
 function chart_theme(palette=1, monochrome_shade='light') {

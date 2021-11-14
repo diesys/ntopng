@@ -1456,19 +1456,20 @@ elseif((page == "ndpi")) then
                                         ...chart_theme(),
                                         ...chart_animation,
                                         ...chart_stroke,
+                                        ...chart_palette,
                                         ...{fill: {type: 'gradient'}},
                                         ...chart_label(), ...chart_legend('bottom'), ...chart_responsive}
          var chart_top_app_categ_opt = {...{series: []}, 
                                         ...{'labels': []}, 
                                         ...chart_type('donut'),
-                                        ...chart_theme('1'),
+                                        ...chart_theme('#ff7500', 'dark'),
                                         ...chart_animation,
                                         ...chart_label(), ...chart_legend('none'), ...chart_responsive}
          var chart_top_app_breed_opt = {...{series: []},
                                         ...{'labels': []},
                                         ...chart_type('pie'),
-                                        ...chart_theme('#ff7500', 'dark'),
                                         ...chart_animation,
+                                        ...chart_theme('3'),
                                         ...chart_label(), ...chart_legend('top'), ...chart_responsive}
          
          top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt)
