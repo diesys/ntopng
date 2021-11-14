@@ -1,21 +1,14 @@
-// 
-// 
-// http://localhost:3000/lua/rest/v2/get/host/data.lua?ifid=1&host=192.168.1.127
-// 
-// 
-
-// ---- TYPE
-function apexc_chart(chart_type, chart_width='100%') {
-	// global configuration
-	// var chart_width = '100%' // int or str (with % or px)
-
-	if (['donut', 'pie', 'radialbar'].indexOf(chart_type) >= 0)
-		return {chart: {type: chart_type, width: chart_width}}
-	
+function NtopApexChart() {
 	// /lua/rest/v2/get/host/data.lua?ifid=1&host=192.168.1.127
 	// this.update = function () {
 	//	
 	// }
+}
+
+// ---- TYPE
+function apexc_chart(chart_type, chart_width='100%') {
+	if (['donut', 'pie', 'radialbar'].indexOf(chart_type) >= 0)
+		return {chart: {type: chart_type, width: chart_width}}
 }
 
 // ---- THEME/PALETTE
@@ -39,7 +32,7 @@ function apexc_label(bool='true') {
 }
 
 const apexc_responsive = [{
-	breakpoint: 480,
+	breakpoint: 500,
 	options: {chart: {width: 200}, legend: {show: false}}
 }]
 
@@ -66,56 +59,40 @@ var url_apex='/lua/rest/v2/get/host/data.lua'
 var data_apex={ifid: '1', host: '192.168.1.127'}
 
 function getNewData(url, data) {
-	$.ajax({
-		type: 'GET',
-		url: url,
-		data: data,
+	$.ajax({type: 'GET', url: url, data: data,
 		success: function (content) {
+			// parse the data if needed
 			new_data = typeof(content) == "object" ? content : jQuery.parseJSON(content)
-
-			if(new_data) {
+			// updates the chart with the new data
+			if(new_data)
 				update_apexc(new_data.rsp, 'ndpi')
-			}
 		}
 	});
 }
 
 function update_apexc(data_rsp, page_key) {
-	// var new_data = data_rsp[page_key]
-	console.log(data_rsp)
 	data = new Array(data_rsp[page_key])
 	updated_data = {series:[],labels:[]}
+	// console.log(data_rsp)
+	// console.log(data)
 
-	datatest = {}
+	new_data = {}
 
 	// divides the array into two lists of data and labels
 	data.forEach(element => {
-		// console.log(element)
-		for (var name in element){
-			// updated_data['labels'].push(name)
-			// updated_data['series'].push(element[name]['bytes.sent'])
-		
-			// datatest[name] = element[name]['bytes.sent']
-			datatest[name] = element[name]['bytes.sent']
-		}
+		for (var name in element)
+			new_data[name] = element[name]['bytes.sent']
 	});
 
-	console.log(datatest)
-
-	//  -----------------------------------------------------
 	// sorts in ascending order
-	var sorted_labels = Object.keys(datatest).sort( function(keyA, keyB) {
-		return datatest[keyA] < datatest[keyB];
+	var sorted_labels = Object.keys(new_data).sort( function(keyA, keyB) {
+		return new_data[keyA] < new_data[keyB];
 	});
 
-	// sorted_datatest = {series: Object.values(datatest).sort(), labels: sorted_labels, animate: false}
-	sorted_datatest = {series: Object.values(datatest).sort((a, b) => b - a), labels: sorted_labels}
-	console.log(sorted_datatest)
+	new_data = {series: Object.values(new_data).sort((a, b) => b - a), labels: sorted_labels}
 
-	top_app_proto_chart.updateOptions(sorted_datatest)
-	//  -----------------------------------------------------
+	top_app_proto_chart.updateOptions(new_data)
 
-	// top_app_proto_chart.updateOptions({series: updated_data['series'], labels: updated_data['labels']})
 }
 
 getNewData(url_apex, data_apex)
@@ -152,22 +129,7 @@ function PieChart(name, update_url, url_params, units, refresh) {
 	// to run each time data is generated
 	this.update = function () {
 		$.ajax({
-			type: 'GET',
-			url: this.update_url,
-			data: this.url_params,
-			success: function (content) {
-				let parsed_content;
-				// console.log(content)
-
-				if (typeof (content) == "object")
-					parsed_content = content;
-				else if (typeof (content) == "string")
-					parsed_content = jQuery.parseJSON(content);
-	
-				if (parsed_content)
-					console.log(parsed_content)
-					// UPDATE CHART HERE
-			}
+		
 		});
 	}
 
