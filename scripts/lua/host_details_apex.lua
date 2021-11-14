@@ -1045,7 +1045,6 @@ print [[/lua/get_arp_data.lua', { ifid: "]] print(ifId.."") print ('", '..hostin
 	print [[
 
 		}
-
 	    </script><p>
 	]]
 
@@ -1439,7 +1438,6 @@ elseif((page == "ndpi")) then
 ]]
 
       print[[
-
 	<script type='text/javascript'>
 	       window.onload=function() {]]
 
@@ -1450,21 +1448,62 @@ elseif((page == "ndpi")) then
 ]]
       end
 
-      print[[ do_pie("#topApplicationProtocols", ']]
-      print (ntop.getHttpPrefix())
-   print [[/lua/rest/v2/get/host/l7/stats.lua', { ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+      -- CUSTOM FOR APEXCHARTs
+      print[[
+         var chart_top_app_proto_opt = {...{series: []}, 
+                                        ...{'labels': []}, 
+                                        ...apexc_chart('donut'), 
+                                        ...apexc_theme(),
+                                        ...{fill: {type: 'gradient'}},
+                                        ...apexc_label(), ...apexc_legend('bottom'), ...apexc_responsive}
+        // var chart_top_app_categ_opt = {...{series: []}, 
+        //                                ...{'labels': []}, 
+        //                                ...apexc_chart('donut'),
+        //                                ...apexc_theme('1'), 
+        //                                ...apexc_label(), ...apexc_legend('none'), ...apexc_responsive}
+         var chart_top_app_breed_opt = {...{series: []},
+                                        ...{'labels': []},
+                                        ...apexc_chart('pie'),
+                                        ...apexc_theme('#ff7500', 'dark'),
+                                        ...apexc_label(), ...apexc_legend('top'), ...apexc_responsive}
+         
+         top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt)
+         // top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt)
+         top_app_breed_chart = new ApexCharts(document.querySelector("#topApplicationBreeds"), chart_top_app_breed_opt)
+         top_app_proto_chart.render()
+         // top_app_categ_chart.render()
+         top_app_breed_chart.render()
+        
+	    setInterval(function () {
+            getNewData(top_app_proto_chart, '/lua/rest/v2/get/host/data.lua', {ifid: '1', host: '192.168.1.127'}, 'ndpi')
+            getNewData(top_app_breed_chart, '/lua/rest/v2/get/host/data.lua', {breed: 'true', ifid: '1', host: '192.168.1.127'}, 'breed')
+        }, 2000);
+        
+        // first run/update
+        getNewData(top_app_proto_chart, '/lua/rest/v2/get/host/data.lua', {ifid: '1', host: '192.168.1.127'}, 'ndpi')
+         // getNewData(top_app_categ_chart, '/lua/rest/v2/get/host/data.lua', {ndpi_category: 'true', ifid: '1', host: '192.168.1.127'}, 'ndpi_categories')
+        getNewData(top_app_breed_chart, '/lua/rest/v2/get/host/data.lua', {breed: 'true', ifid: '1', host: '192.168.1.127'}, 'breed')
 
-				   do_pie("#topApplicationCategories", ']]
-      print (ntop.getHttpPrefix())
-      print [[/lua/rest/v2/get/host/l7/stats.lua', { ndpi_category: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+      }
 
-				   do_pie("#topApplicationBreeds", ']]
-      print (ntop.getHttpPrefix())
-      print [[/lua/rest/v2/get/host/l7/stats.lua', { breed: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+   ]]
+      
+   --    print[[ do_pie("#topApplicationProtocols", ']]
+   --    print (ntop.getHttpPrefix())
+   -- print [[/lua/rest/v2/get/host/l7/stats.lua', { ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+
+	-- 			   do_pie("#topApplicationCategories", ']]
+   --    print (ntop.getHttpPrefix())
+   --    print [[/lua/rest/v2/get/host/l7/stats.lua', { ndpi_category: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+
+	-- 			   do_pie("#topApplicationBreeds", ']]
+   --    print (ntop.getHttpPrefix())
+   --    print [[/lua/rest/v2/get/host/l7/stats.lua', { breed: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
+
+	-- 			}]]
 
 
-				}
-
+print[[
 function update_ndpi_table() {
   $.ajax({
     type: 'GET',
@@ -2664,5 +2703,13 @@ print [[
    </script>
     ]]
 end
+
+
+-- CUSTOM SCRIPT IMPORT (because is minified in deps.min.js) (by diesys)
+-- <script type='text/javascript' src='/js/pie-chart.js' defer></script>
+print[[
+   <script type='text/javascript' src='/js/apexchart-wrapper.js' defer></script>
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts" defer></script>
+]]
 
 dofile(dirs.installdir .. "/scripts/lua/inc/footer.lua")
