@@ -2,7 +2,7 @@ function NtopApexChart(type, theme, legend, label, data, api_url) {
 	// FORSE NE SERVONO MENO? O SI PASSA DIRETTAMENTE IL JSON CONFIG?
 
 	//// unify objects to have a custom options each time as
-	// chart = {...{series:[data]}, ...{series:[labels]}, ...apexc_chart('donut'), ...apexc_label(), ...apexc_legend_side(), ...apexc_responsive}
+	// chart = {...{series:[data]}, ...{series:[labels]}, ...chart_type('donut'), ...chart_label(), ...chart_legend_side(), ...chart_responsive}
 
 	// /lua/rest/v2/get/host/data.lua?ifid=1&host=192.168.1.127
 	// this.update = function () {
@@ -10,37 +10,72 @@ function NtopApexChart(type, theme, legend, label, data, api_url) {
 	// }
 }
 
+// responsive breakpoints
+const chart_responsive = [{
+	breakpoint: 500, options: {chart: {width: "50%"}, legend: {show: false}},
+}]
+
 // ---- TYPE
-function apexc_chart(chart_type, chart_width='100%') {
+function chart_type(chart_type, chart_width='100%') {
 	if (['donut', 'pie', 'radialbar', 'polarArea'].indexOf(chart_type) >= 0)
-		return {chart: {type: chart_type, width: chart_width}}
+		return {chart: {type: chart_type, width: chart_width}, stroke: {show: false}, colors: chart_colors, ...chart_suffix(' KB')}
 }
 
+// custom theme, because palette has only 5 colors
+const chart_colors = ['#208fdb', '#2bca80', '#fa4a80', '#fec019', '#ff5520', '#a71da0', '#a0e300', '#204070']
+
 // ---- THEME/PALETTE
-function apexc_theme(palette=1, monochrome_shade='light') {
+function chart_theme(palette=1, monochrome_shade='light') {
 	if(palette[0] == '#' && !parseInt(palette))	// HEX color for monochrome palette
 		return {theme: {monochrome: {enabled: true, color: palette, shadeTo: monochrome_shade, shadeIntensity: .7}}}
 	else if(palette > 0 && palette < 11)	// default palette https://apexcharts.com/docs/options/theme#palette
 		return {theme: {palette: `palette${palette}`}}
 }
 
+// ---- FORMATTER (tooltips) to add a suffix like "MB", "KB", etc
+function chart_suffix(suffix) {
+	return {tooltip: {y: {
+				formatter: function(value) {
+					return value + suffix
+			}}}}
+}
+
 // ---- LEGEND
-function apexc_legend(side='bottom') {
+function chart_legend(side='bottom') {
     if (['bottom', 'right', 'top', 'left'].indexOf(side) >= 0)
         return {legend: {position: side, offsetY: 0}}
     else if(side == 'none')
         return {legend: {show: false}}
 }
 
-function apexc_label(bool='true') {
+function chart_label(bool='true') {
 	return {dataLabels: {enabled: bool == 'true'}}
 }
 
-const apexc_responsive = [{
-	breakpoint: 500,
-	options: {chart: {width: 200}, legend: {show: false}}
-}]
+const chart_animation = {
+	// Currently NO ANIMATION DEFAULT
+	animations: {
+		enabled: true,
+		easing: 'easein',
+		speed: 200,
+		// animateGradually: {
+		// 	enabled: false,
+		// 	delay: 0
+		// },
+		// dynamicAnimation: {
+		// 	enabled: false,
+		// 	speed: 0
+		// }
+	}
+}
 
+const chart_stroke = {
+	stroke: {
+		show: true,
+		curve: 'smooth',
+		width: 0,
+	}
+}
 
 
 // Wrapper & self-update function
@@ -58,7 +93,7 @@ function do_pie(name, update_url, url_params, units, refresh) {
 function getNewData(chart_obj, api_url, vars_url, page_key) {
 	$.ajax({type: 'GET', url: api_url, data: vars_url,
 		success: function (content) {
-			console.log(api_url, vars_url, content)
+			// console.log(api_url, vars_url, content)
 			// parse data into an obj, if needed
 			new_data = typeof(content) == "object" ? content : jQuery.parseJSON(content)
 			// updates the chart with the new data
@@ -80,25 +115,25 @@ function update_apexc(chart_obj, data_rsp, page_key) {
 		updated_data = {series:[], labels:[], breed:[]}
 	}
 	
-	console.log(data_rsp)
+	// console.log(data_rsp)
 	// console.log(data)
 
 	new_data = {}
 
 	// divides the array into two lists of data and labels
 	data.forEach(element => {
-		for (var name in element)
-			new_data[name] = element[name]['bytes.sent']
+		for (var name in element) { // convert to kb and rounds
+			new_data[name] = parseFloat((element[name]['bytes.sent'] / 1024).toFixed(2))
+		}
 	});
 
-	// sorts in ascending order
+	// sort labels in ascending order (based on value)
 	var sorted_labels = Object.keys(new_data).sort( function(keyA, keyB) {
 		return new_data[keyA] < new_data[keyB];
 	});
 
-	new_data = {series: Object.values(new_data).sort((a, b) => b - a), labels: sorted_labels}
-
-	chart_obj.updateOptions(new_data)
+	// consruct and update the chart with the new data
+	chart_obj.updateOptions({series: Object.values(new_data).sort((a, b) => b - a), labels: sorted_labels})
 
 }
 

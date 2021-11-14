@@ -1452,26 +1452,30 @@ elseif((page == "ndpi")) then
       print[[
          var chart_top_app_proto_opt = {...{series: []}, 
                                         ...{'labels': []}, 
-                                        ...apexc_chart('donut'), 
-                                        ...apexc_theme(),
+                                        ...chart_type('donut'), 
+                                        ...chart_theme(),
+                                        ...chart_animation,
+                                        ...chart_stroke,
                                         ...{fill: {type: 'gradient'}},
-                                        ...apexc_label(), ...apexc_legend('bottom'), ...apexc_responsive}
-        // var chart_top_app_categ_opt = {...{series: []}, 
-        //                                ...{'labels': []}, 
-        //                                ...apexc_chart('donut'),
-        //                                ...apexc_theme('1'), 
-        //                                ...apexc_label(), ...apexc_legend('none'), ...apexc_responsive}
+                                        ...chart_label(), ...chart_legend('bottom'), ...chart_responsive}
+         var chart_top_app_categ_opt = {...{series: []}, 
+                                        ...{'labels': []}, 
+                                        ...chart_type('donut'),
+                                        ...chart_theme('1'),
+                                        ...chart_animation,
+                                        ...chart_label(), ...chart_legend('none'), ...chart_responsive}
          var chart_top_app_breed_opt = {...{series: []},
                                         ...{'labels': []},
-                                        ...apexc_chart('pie'),
-                                        ...apexc_theme('#ff7500', 'dark'),
-                                        ...apexc_label(), ...apexc_legend('top'), ...apexc_responsive}
+                                        ...chart_type('pie'),
+                                        ...chart_theme('#ff7500', 'dark'),
+                                        ...chart_animation,
+                                        ...chart_label(), ...chart_legend('top'), ...chart_responsive}
          
          top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt)
-         // top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt)
+         top_app_categ_chart = new ApexCharts(document.querySelector("#topApplicationCategories"), chart_top_app_categ_opt)
          top_app_breed_chart = new ApexCharts(document.querySelector("#topApplicationBreeds"), chart_top_app_breed_opt)
          top_app_proto_chart.render()
-         // top_app_categ_chart.render()
+         top_app_categ_chart.render()
          top_app_breed_chart.render()
         
 	    setInterval(function () {
@@ -1487,20 +1491,6 @@ elseif((page == "ndpi")) then
       }
 
    ]]
-      
-   --    print[[ do_pie("#topApplicationProtocols", ']]
-   --    print (ntop.getHttpPrefix())
-   -- print [[/lua/rest/v2/get/host/l7/stats.lua', { ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
-
-	-- 			   do_pie("#topApplicationCategories", ']]
-   --    print (ntop.getHttpPrefix())
-   --    print [[/lua/rest/v2/get/host/l7/stats.lua', { ndpi_category: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
-
-	-- 			   do_pie("#topApplicationBreeds", ']]
-   --    print (ntop.getHttpPrefix())
-   --    print [[/lua/rest/v2/get/host/l7/stats.lua', { breed: "true", ifid: "]] print(ifId.."") print ("\" , ") print(hostinfo2json(host_info)) print [[ }, "", refresh);
-
-	-- 			}]]
 
 
 print[[
