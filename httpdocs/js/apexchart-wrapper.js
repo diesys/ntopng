@@ -1,4 +1,4 @@
-// Wrapper function
+// Wrapper function (old)
 function do_pie(name, update_url, url_params, refresh) {
 	// New class instance
 	// var pie = new PieChart(name, update_url, url_params, units, refresh);
@@ -60,17 +60,20 @@ function chart_legend(side='bottom') {
         return {legend: {show: false}}
 }
 
+// ---- LABEL
 function chart_label(bool='true') {
 	return {dataLabels: {enabled: bool == 'true'}}
 }
 
-const chart_animation = {	// Currently NO ANIMATION DEFAULT
+// Currently NO ANIMATION DEFAULT
+const chart_animation = {	
 	animations: {
 		enabled: true,
 		easing: 'easein',
 		speed: 200}
 }
 
+// ---- STROKE
 const chart_stroke = {
 	stroke: {
 		show: true,
@@ -86,6 +89,7 @@ var selectFirsts = (data, n) => data.series.length <= n ? D : ({
 	labels: data.labels.slice(0,n).concat('Others')
 })
 
+// gets new data from api
 function getNewData(chart_obj, api_url, vars_url, page_key) {
 	$.ajax({type: 'GET', url: api_url, data: vars_url,
 		success: function (content) {
@@ -98,6 +102,7 @@ function getNewData(chart_obj, api_url, vars_url, page_key) {
 	});
 }
 
+// updates the chart with new data
 function update_apexc(chart_obj, data_rsp, page_key) {
 	// coi metodi interni, cosi ha gia' l'url giusto coi parametri giusti...
 

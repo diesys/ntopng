@@ -1,6 +1,6 @@
 # Using ApexCharts in ntopng with vanilla JS
 
-> WARNING! This is page is incomplete and under development, use for debug only!
+> WARNING! This is page is incomplete and under development, use for debug only! And is been developed for the community ed. only, some pro features may not work right now
 
 
 
