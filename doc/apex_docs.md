@@ -4,7 +4,7 @@
 
 
 
-A working page using pie apex can be found in `scripts/lua/host_details_apex.lua` (copy of `scripts/lua/host_details.lua`, which differs in lines 1452-1495 and at the end including [ApexCharts](https://apexcharts.com/docs) via CDN and `httpdocs/js/apexchart-wrapper.js`, ).
+A working page using pie apex can be found in `scripts/lua/host_details_apex.lua` (copy of `scripts/lua/host_details.lua`, which differs in lines 1452-1495 and at the end including [ApexCharts](https://apexcharts.com/docs) via CDN and `httpdocs/js/apexchart-wrapper.js`, ); so to use apex chart in all `Host -> Apps` must be renamed to `host_details.lua`.
 
 May be useful to see this together with the other charts, because many things are in common between pie and other king of charts and could be more general purpose, maybe working on different resp from the api
 
