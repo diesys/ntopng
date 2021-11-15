@@ -1462,14 +1462,15 @@ elseif((page == "ndpi")) then
          var chart_top_app_categ_opt = {...{series: []}, 
                                         ...{'labels': []}, 
                                         ...chart_type('donut'),
-                                        ...chart_theme('#ff7500', 'dark'),
                                         ...chart_animation,
+                                        ...chart_theme('3'),
                                         ...chart_label(), ...chart_legend('none'), ...chart_responsive}
          var chart_top_app_breed_opt = {...{series: []},
                                         ...{'labels': []},
                                         ...chart_type('pie'),
                                         ...chart_animation,
-                                        ...chart_theme('3'),
+                                        ...chart_stroke,
+                                        ...chart_theme('#4f75a0', 'light'),
                                         ...chart_label(), ...chart_legend('top'), ...chart_responsive}
          
          top_app_proto_chart = new ApexCharts(document.querySelector("#topApplicationProtocols"), chart_top_app_proto_opt)
@@ -1486,7 +1487,7 @@ elseif((page == "ndpi")) then
         
         // first run/update
         getNewData(top_app_proto_chart, '/lua/rest/v2/get/host/data.lua', {ifid: '1', host: '192.168.1.127'}, 'ndpi')
-         // getNewData(top_app_categ_chart, '/lua/rest/v2/get/host/data.lua', {ndpi_category: 'true', ifid: '1', host: '192.168.1.127'}, 'ndpi_categories')
+        // getNewData(top_app_categ_chart, '/lua/rest/v2/get/host/data.lua', {ndpi_category: 'true', ifid: '1', host: '192.168.1.127'}, 'ndpi_categories')
         getNewData(top_app_breed_chart, '/lua/rest/v2/get/host/data.lua', {breed: 'true', ifid: '1', host: '192.168.1.127'}, 'breed')
 
       }

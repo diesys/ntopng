@@ -9,9 +9,10 @@ function do_pie(name, update_url, url_params, refresh) {
 }
 
 
-// FARE OPZIONI IN MODO TALE CHE POSSO PASSARLE COME VOGLIO IO A DIZIONARIO, E UNO DEI CAMPI E' IL DIZIONARIO PER APEX
-// il nuovo oggetto crea il dizionario di conf apex prima, poi scaricarsi i dati poi return
-function aChart(type, theme, legend, label, data, api_url) {
+// Class api_conf has url and parameters, apex_conf allows to use custom properties with apexchart
+// new object builds the new dict config for apex and then loads data from api, self updates and return the obj value
+function aChart(type, api_conf, apex_conf = {}) {
+// function aChart(type, theme, legend, label, data, api_url) {
 	//// unify objects to have a custom options each time as
 	// chart = {...{series:[data]}, ...{series:[labels]}, ...chart_type('donut'), ...chart_label(), ...chart_legend_side(), ...chart_responsive}
 
