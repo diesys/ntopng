@@ -6,7 +6,7 @@
 
 A working page using pie apex can be found in `scripts/lua/host_details_apex.lua` (copy of `scripts/lua/host_details.lua`, wich includes [ApexCharts](https://apexcharts.com/docs) via CDN and `httpdocs/js/apexchart-wrapper.js`).
 
-May be useful to see this together with the other charts, because many things are in common between pie and other king of charts
+May be useful to see this together with the other charts, because many things are in common between pie and other king of charts and could be more general purpose, maybe working on different resp from the api
 
 #### Basis for future chart use
 

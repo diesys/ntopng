@@ -84,7 +84,7 @@ const chart_stroke = {
 
 
 // selects the first N items (if enough, MUST be ALREADY ordered) in Data and reduces the rest to "Others"
-var selectFirsts = (data, n) => data.series.length <= n ? D : ({
+var selectFirsts = (data, n) => data.series.length <= n ? data : ({
 	series: data.series.slice(0,n).concat(data.series.slice(n).reduce((x,y)=>parseFloat((x+y)))),
 	labels: data.labels.slice(0,n).concat('Others')
 })
@@ -119,8 +119,15 @@ function update_apexc(chart_obj, data_rsp, page_key) {
 	// divides the array into two lists of data and labels
 	data.forEach(element => {
 		for (var name in element) { // convert to kb and rounds
-			new_data[name] = parseFloat((element[name]['bytes.sent'] / 1024).toFixed(2))
-		}
+			if(page_key != 'breed') {
+				new_data[name] = parseFloat((element[name]['bytes.sent'] / 1024).toFixed(2))
+			} else {
+				if(new_data[element[name]['breed']])
+					new_data[element[name]['breed']] += 1
+				else
+					new_data[element[name]['breed']] = 1
+			}
+		} 
 	});
 
 	// sort labels in ascending order (based on value)

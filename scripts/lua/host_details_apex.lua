@@ -1480,14 +1480,14 @@ elseif((page == "ndpi")) then
          top_app_categ_chart.render()
          top_app_breed_chart.render()
         
-	    setInterval(function () {
+	      setInterval(function () {
             getNewData(top_app_proto_chart, '/lua/rest/v2/get/host/data.lua', {ifid: '1', host: '192.168.1.127'}, 'ndpi')
             getNewData(top_app_breed_chart, '/lua/rest/v2/get/host/data.lua', {breed: 'true', ifid: '1', host: '192.168.1.127'}, 'breed')
-        }, 2000);
+         }, 2000);
         
         // first run/update
         getNewData(top_app_proto_chart, '/lua/rest/v2/get/host/data.lua', {ifid: '1', host: '192.168.1.127'}, 'ndpi')
-        // getNewData(top_app_categ_chart, '/lua/rest/v2/get/host/data.lua', {ndpi_category: 'true', ifid: '1', host: '192.168.1.127'}, 'ndpi_categories')
+        getNewData(top_app_categ_chart, '/lua/rest/v2/get/host/data.lua', {ndpi_category: 'true', ifid: '1', host: '192.168.1.127'}, 'ndpi_categories')
         getNewData(top_app_breed_chart, '/lua/rest/v2/get/host/data.lua', {breed: 'true', ifid: '1', host: '192.168.1.127'}, 'breed')
 
       }
