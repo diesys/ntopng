@@ -21,6 +21,19 @@ Below there's a list of just some of the class functions (other are in the main 
 | `selectFirsts(_, _)` | `{series:[],labels:[]}`, `int`                                          |
 | `label(_)`           | `true` \| `false`                                                       |
 
+---
 
+#### notes
+Now the table with charts isn't responsive enough, so to see both charts in one page with the debugger can be useful to add temporarly the following `css`:
+```css
+
+/* pie-chart.css | http://localhost:3000/css/pie-chart.css */
+
+.pie-chart {
+  /* width: 500px; */
+  width: auto !important;
+  min-width: 250px;
+}
+```
 
           
